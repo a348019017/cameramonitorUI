@@ -1,4 +1,4 @@
-﻿import { gettheme } from "../../../api/map.js"
+﻿import { gettheme } from "../api/map"
 import { GUID, stringFormat, plane_from_points } from "./util"
 import { drawWater } from "./cesium/water"
 import { Octree } from "./cesium/octree"
