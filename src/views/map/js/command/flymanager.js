@@ -153,6 +153,7 @@ export class CesiumFlyManager {
             //取消掉绑定初始化
             viewer.trackedEntity = null;
         }
+        
         //处理模型的初始化
         if (option.modelinfo) {
             this.offsetheading = option.modelinfo.heading ? option.modelinfo.heading : 0;
