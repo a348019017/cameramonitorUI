@@ -7,7 +7,8 @@ export let preDefineTMSUrl = [
     title: "高德影像",
     url: "https://webst02.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}",
     minimumLevel: 3,
-    maximumLevel: 18,
+    //这里需要设置原始瓦片所能支持的最高级别
+    maximumLevel: 16,
     value: false,
   },
   {
@@ -15,7 +16,7 @@ export let preDefineTMSUrl = [
     title: "高德地图",
     url: "http://webrd01.is.autonavi.com/appmaptile?x={x}&y={y}&z={z}&lang=zh_cn&size=2&scale=1&style=8",
     minimumLevel: 3,
-    maximumLevel: 18,
+    maximumLevel: 21,
     value: false
   },
   {
@@ -23,7 +24,7 @@ export let preDefineTMSUrl = [
     title: "谷歌影像",
     url: "https://crack.jyaitech.com/gis/getmap?x={x}&y={y}&z={z}",
     minimumLevel: 3,
-    maximumLevel: 18,
+    maximumLevel: 21,
     value: true
   }
 ];

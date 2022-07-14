@@ -12,15 +12,32 @@ const testproject = `
       ],
       "intensity": 0.5
   },
-  "camera": [
-      104.95529,
-      25.78603,
-      2500.0,
-      0.0,
-      -90.0,
-      0.0
-  ],
-  "layers": [
+  "camera": [121.92871239524351, 40.88857977244281, 717.2317566480032, 334.11191710192395, -30.90855164693353, 359.9029586440633],
+  "layers": [{
+      "name":"ytlhz",
+      "url": "http://data.marsgis.cn/3dtiles/max-ytlhz/tileset.json",
+      "type":"3dtile",
+      "scale": 1,
+      "offset": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "style":{
+         "type":"graduaflash",
+         "minheight":0,
+         "maxheight": 12.1,
+         "gltfUpAxis":"y"
+      },
+      "checked": true,
+      "columns": [
+        {
+          "name": "name",
+          "title": "名称"
+        }
+      ],
+      "isoffset": false
+  }
   ],
   "polygonlayername": "缺陷面",
   "timelinelayername": "裂缝",
