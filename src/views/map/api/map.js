@@ -63,8 +63,110 @@ const testproject = `
   ]
 }`
 
+const testproject2 = `
+{
+  "id": 0,
+  "name": "太原市",
+  "light": {
+      "direction": [
+          0.0,
+          -90.0,
+          0.0
+      ],
+      "intensity": 0.5
+  },
+  "camera": [112.54216627280427, 37.7606077669049, 12000, -15.11191710192395, -90.90855164693353, 0.9029586440633],
+  "layers": [{
+      "name":"ytlhz",
+      "url": "http://192.168.2.189:6583/Taiyuan/3dTile/Building/tileset.json",
+      "type":"3dtile",
+      "scale": 1,
+      "offset": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "style":{
+         "type":"graduaflash",
+         "minheight":751.01,
+         "maxheight": 1093.02,
+         "gltfUpAxis":"y"
+      },
+      "checked": true,
+      "columns": [
+        {
+          "name": "name",
+          "title": "名称"
+        }
+      ],
+      "isoffset": false
+  },
+  {
+    "url": "http://192.168.2.189:6583/Taiyuan/Html/Json/points.json",
+    "name": "车辆数据",
+    "type": "geojson",
+    "prj":"EPSG:4326",
+    "style": {
+        "name":"billboard"
+    },
+    "camera": [112.54216627280427, 37.7606077669049, 12000, -15.11191710192395, -90.90855164693353, 0.9029586440633],
+    "offset": [
+        112.40843958156897,
+        32.964263795753968,
+        0.0
+    ],
+    "checked": true,
+    "columns": [
+        {
+            "name": "name",
+            "title": "名称"
+        }
+    ],
+    "islegend": false,
+    "isoffset": false,
+    "keyproperty": "id"
+   },
+   {
+    "url": "static/taiyuanroad.geojson",
+    "name": "路网",
+    "type": "geojson",
+    "prj":"EPSG:4326",
+    "style": {
+        "type":"trail",
+        "name": "point",
+        "depthfailshow": true,
+        "clampToGround":true,
+        "width":10
+    },
+    "camera": [112.54216627280427, 37.7606077669049, 12000, -15.11191710192395, -90.90855164693353, 0.9029586440633],
+    "offset": [
+        112.40843958156897,
+        32.964263795753968,
+        0.0
+    ],
+    "checked": true,
+    "columns": [
+        {
+            "name": "name",
+            "title": "名称"
+        }
+    ],
+    "islegend": false,
+    "isoffset": false,
+    "labelshow": false,
+    "keyproperty": "id",
+    "labelproperty": "id"
+   }
+  ],
+  "polygonlayername": "缺陷面",
+  "timelinelayername": "裂缝",
+  "terrainprovider": "https://www.supermapol.com/realspace/services/3D-stk_terrain/rest/realspace/datas/info/data/path"
+}
+`
+
+
 export function getProject(data) {
-  return JSON.parse(testproject);
+  return JSON.parse(testproject2);
 }
 
 

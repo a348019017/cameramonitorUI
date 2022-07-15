@@ -4,7 +4,7 @@
 .maproot {
   .easyearthContainer {
     width: 100%;
-    height: calc(100vh - 214px);
+    height: calc(100vh -115px);
   }
 }
 </style>
@@ -59,8 +59,6 @@ export default {
     this.initprojectx(this.curproject, viewer);
 
     //获取三维球的全局配置，写入到全局中用于相关调用，然后再初始化地球
-
-
     var layer = new Cesium.MapboxStyleImageryProvider({
       styleId: 'dark-v10',
       accessToken: 'pk.eyJ1IjoicG9uZ3hpZSIsImEiOiJjbDVrdmtndHowZHY3M2pxcjdrZzZsZTVoIn0.3PpdH5rSURGGtrfp90iIOw',

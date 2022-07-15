@@ -18,7 +18,6 @@ export let octree = new Octree();
 mapHelper.stylehandle = { water: drawWater }
 
 
-
 //缓存的instance，这支持多个url。
 mapHelper.cachemodel = []
 
@@ -26,7 +25,6 @@ mapHelper.cachemodel = []
 mapHelper.clipbypolygons = function (polygons) {
 
 }
-
 
 
 //封装的飞行定位的方法，传入的是destination以及heading pitch roll
@@ -66,12 +64,13 @@ let coordinatestopositions = function (coordinates, transform, element) {
   return position;
 }
 
-
-
-
+//默认的pin样式
+const pinBuilder = new Cesium.PinBuilder();
+const defaultbillboardimageurl = pinBuilder.fromColor(Cesium.Color.ROYALBLUE, 48).toDataURL();
 
 //处理点位的加载
 let handlepointtoenty = function (element, feature, modelMatrix, viewer) {
+
   var ifeature = feature.geometry.coordinates;
   var x = ifeature[0];
   var y = ifeature[1];
@@ -111,7 +110,7 @@ let handlepointtoenty = function (element, feature, modelMatrix, viewer) {
   if (element.style && element.style.name === "billboard") {
     //暂时只暴露scale参数和image参数，其余固定
     defaultentity.billboard = {
-      image: element.style.image ? element.style.image : "/static/images/楼盘.png",
+      image: element.style.image ? element.style.image : defaultbillboardimageurl,
       horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
       verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
       scale: element.style.scale ? element.style.scale : 1.0,
@@ -152,18 +151,6 @@ let handlepointtoenty = function (element, feature, modelMatrix, viewer) {
   return enty;
 }
 
-
-
-
-// let handleentytooctree_entry=function(){
-//     if(!_octree)
-//       _octree=new CubicOctree()
-// }
-
-
-
-
-
 //处理添加数据到八叉树，主要添加的是cubic立方体范围,shpere等
 let handleentytooctree = function (element, entity, sphere) {
   if (element.isindex) {
@@ -180,8 +167,6 @@ let handlegeometrynormalcomputer = function (element, entity, positions) {
   }
 }
 
-
-
 let handlepolylinetoenty = function (element, feature, modelMatrix, viewer) {
   var ifeature = feature.geometry.coordinates;
   var positions = coordinatestopositions(ifeature, modelMatrix, element);
@@ -189,9 +174,9 @@ let handlepolylinetoenty = function (element, feature, modelMatrix, viewer) {
   //var tboudingbox = Cesium.AxisAlignedBoundingBox.fromPoints(positions);
   var polyCenter = tboudingsphere.center;
 
-
   let defaultcolor = Cesium.Color.RED;
   let defaultwidth = 3;
+  let defaultclampToGround = false;
 
   //默认不穿透
   let defaultdepthfailshow = false;
@@ -205,7 +190,14 @@ let handlepolylinetoenty = function (element, feature, modelMatrix, viewer) {
   if (element.style && element.style.depthfailshow) {
     defaultdepthfailshow = element.style.depthfailshow;
   }
+  if (element.style && element.style.clampToGround) {
+    defaultclampToGround = element.style.clampToGround;
+  }
 
+  //对于材质可能的修改
+  if (element.style && element.style.type == "trail") {
+    defaultcolor = new Cesium.PolylineTrailLinkMaterialProperty(Cesium.Color.CYAN, undefined, 3000);
+  }
 
   //判断可能出现的专题图配置
   if (element.islegend && element.theme) {
@@ -234,7 +226,7 @@ let handlepolylinetoenty = function (element, feature, modelMatrix, viewer) {
       positions: positions,
       material: defaultcolor,
       width: defaultwidth,
-      clampToGround: false,
+      clampToGround: defaultclampToGround,
       depthFailMaterial: defaultdepthfailshow ? defaultcolor : undefined
     },
     //enty的名称和element的名称一致，这就起到了标识分组的作用
@@ -275,7 +267,7 @@ mapHelper.loadgeojsonex = function (element, viewer) {
     );
   }
   let eurl = element.url;
-  if (window.config.api && eurl.indexOf('http') == -1) {
+  if (window.config && window.config.api && eurl.indexOf('http') == -1) {
     eurl = new URL(eurl, window.config.api).href
   }
   //如果是动态图层，一般随时间线动态获取数据，则动态构造一个拼接的url
@@ -296,6 +288,7 @@ mapHelper.loadgeojsonex = function (element, viewer) {
   }
   //这里尝试偏移世界坐标系，看加载模型的时候是不是以世界参考系为参考进行转换
   Cesium.Resource.fetchJson({ url: eurl }).then(function (jsonData) {
+
     //判读是feature还是geometry，feature显示属性表,变换每个点的位置坐标，如果之前有数据记得清空，在请求到数据之后清除
     if (element.entities && element.entities.length > 0) {
       element.entities.forEach((ele) => {
@@ -995,4 +988,18 @@ mapHelper.stopfixedrotatecamera = function (viewer) {
 
 //其它helper文件的合并引用
 mapHelper.set3dtileset = _3dtilesetshader;
+
+import addpoststage from "./cesium/postproccessstage/circlepoststatges"
+//测试后处理效果，以圆形扩散为例子
+mapHelper.testaddpoststages = function () {
+  let longitude = 2.127973853130549;
+  let latitude = 0.7137879643532461;
+  let height = 19.497283130953686;
+
+  let centerp = new Cesium.Cartographic(longitude, latitude, 19);
+  //最大区域
+  let maxraiud = 500;
+  let scanColor = Cesium.Color.RED;
+  addpoststage(viewer, centerp, maxraiud, scanColor, 4000);
+}
 export default mapHelper

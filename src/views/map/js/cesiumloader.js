@@ -1,5 +1,6 @@
 import mapHelper from './mapHelper'
 import { myprimitives, octree } from './mapHelper'
+import { handlepointsloadbygeojson } from "./cesium/handlepointcluster";
 var cesiumloader = {}
 
 let curproject = undefined;
@@ -74,24 +75,6 @@ cesiumloader.load3dtileset = function (element, viewer) {
 }
 
 
-
-//处理3dtileset的标签显示功能，获取3dtileset的feature信息，然后通过其minmax来生成标签,作为显示被遮挡对象（还有一种是添加outlinepass效果，用于凸显被遮挡的物体，如传感器等）
-let handle3dtilelabelshow = function (item, viewer) {
-
-  if (item.type == "3dtile") {
-    //获取3dtilesetprimitive对象
-    var tilesetprimitive = gettilesetfromentity(item.name);
-    //var features=
-
-
-  }
-
-
-
-}
-
-
-
 //加载项目
 cesiumloader.loadproject = function (project, _userinfo, _defaultcfg, viewer) {
   //这里需要传入用户信息
@@ -142,11 +125,20 @@ cesiumloader.loadproject = function (project, _userinfo, _defaultcfg, viewer) {
 }
 
 
-
+//提供GeoJSONdatasource加载
+cesiumloader.loadGeojsonBySource = function (element) {
+  var source = Cesium.GeoJsonDataSource.load(element.url).then((data, err) => {
+    handlepointsloadbygeojson(data, element)
+  });
+  viewer.dataSources.add(
+    source
+  );
+  element.entities = [source];
+}
 
 function initService(mapservices, viewer) {
   // 移除掉场景的所有内容,这里因为没有添加Datasource，所以暂时屏蔽掉
-  //viewer.dataSources.removeAll(false);
+  viewer.dataSources.removeAll(false);
   //移除所有的entity
   viewer.entities.removeAll();
   myprimitives.removeAll();
@@ -155,9 +147,6 @@ function initService(mapservices, viewer) {
   //scene的primitives不能清空，不然会有未知问题,这里创建一个primitivecollection来记录
   //viewer.scene.primitives.removeAll();
 
-
-  //viewer.scene.globe.show = false;
-  //viewer.imageryLayers.get(0).show = false;
   if (mapservices) {
     let count = 0;
     let that = this;
@@ -178,6 +167,12 @@ function initService(mapservices, viewer) {
               viewer,
               userinfo
             );
+          }
+          break;
+        case "geojsonx":
+          {
+            //处理矢量数据也即是geojson格式的加载
+            cesiumloader.loadGeojsonBySource(element);
           }
           break;
         case "Terrain":
@@ -221,10 +216,7 @@ function initproject(project, viewer) {
   if (project && project.camera) {
     mapHelper.flyto(viewer, project.camera, extramodify3dtileset);
   }
-
-
   initscenesetting(project.light, viewer);
-
 }
 
 
@@ -349,5 +341,6 @@ function gettransform(modelmatrix, transform) {
 }
 
 cesiumloader.initscenesetting = initscenesetting;
+
 export default cesiumloader
 
