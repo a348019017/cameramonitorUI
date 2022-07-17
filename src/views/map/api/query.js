@@ -91,7 +91,7 @@ function parsepointsToFlyPath(data) {
   }
   routes[0].flytime = 0;
 
-
+  debugger
   let errorroute = routes.filter(i => i.flytime <= 0.0);
 
   let path = {

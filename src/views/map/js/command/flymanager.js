@@ -45,8 +45,8 @@ function createPoint(route) {
   var point = viewer.entities.add({
     position: worldPosition,
     point: {
-      color: Cesium.Color.RED,
-      pixelSize: 5,
+      color: Cesium.Color.BLACK,
+      pixelSize: 10,
       heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
     },
   });
@@ -64,7 +64,7 @@ function createLine(routes) {
       positions: positionData,
       clampToGround: true,
       material: Cesium.Color.RED,
-      width: 10,
+      width: 8,
     },
   });
   return shape;
@@ -103,7 +103,7 @@ export class CesiumFlyManager {
     //this.viewType=""
     //默认速度为10m每秒，这里不再使用flytime参数，也不再单独控制每段的速度，需要再作修改。
     this.speed = 10;
-
+    this.factor = 2.0;
     this.flytime = 5;
     if (option && option.viewAngle) {
       this.pitchValue = option.viewAngle;
@@ -121,6 +121,9 @@ export class CesiumFlyManager {
     }
     if (option && option.altitudemode) {
       this.altitudemode = option.altitudemode;
+    }
+    if (option && option.factor) {
+      this.factor = 2.0;
     }
     //根据高程模型处理marks的值
     //绝对高程，全部复写高程
@@ -315,8 +318,15 @@ export class CesiumFlyManager {
       this.postions[this.marksIndex].flytime = flytime;
     }
 
-    // 时间间隔2秒钟
-    this.setExtentTime(this.postions[this.marksIndex].flytime);
+    // 时间间隔2秒钟//排除掉0.1s以下的轨迹
+    if (this.postions[this.marksIndex].flytime <= 0.1) {
+      self.marksIndex = ++self.marksIndex >= self.postions.length ? 0 : self.marksIndex;
+      if (self.marksIndex != 0) {
+        self.flyExtent();
+      }
+      return;
+    }
+    this.setExtentTime(this.postions[this.marksIndex].flytime / this.factor);
     var that = this;
     this.Exection = function TimeExecution() {
       let preIndex = self.marksIndex - 1;
@@ -335,20 +345,20 @@ export class CesiumFlyManager {
 
 
       //小场景下是线性的计算
+      const reallng = originLng + (self.postions[self.marksIndex].lng - originLng) / self.postions[self.marksIndex].flytime * delTime * that.factor;
+      const reallat = originLat + (self.postions[self.marksIndex].lat - originLat) / self.postions[self.marksIndex].flytime * delTime * that.factor;
       let endPosition = Cesium.Cartesian3.fromDegrees(
-        (originLng + (self.postions[self.marksIndex].lng - originLng) / self.postions[self.marksIndex].flytime * delTime),
-        (originLat + (self.postions[self.marksIndex].lat - originLat) / self.postions[self.marksIndex].flytime * delTime),
+        reallng,
+        reallat,
         //这个高度一致是有误的
         self.postions[self.marksIndex].height
       );
-
-      //相对高程贴地处理
-
+      //相对高程实时贴地处理
       if (that.altitudemode == "相对高程") {
-        const realheight = that.getrealpositions({ lng: (originLng + (self.postions[self.marksIndex].lng - originLng) / self.postions[self.marksIndex].flytime * delTime), lat: (originLat + (self.postions[self.marksIndex].lat - originLat) / self.postions[self.marksIndex].flytime * delTime) });
+        const realheight = that.getrealpositions({ lng: reallng, lat: reallat });
         endPosition = Cesium.Cartesian3.fromDegrees(
-          (originLng + (self.postions[self.marksIndex].lng - originLng) / self.postions[self.marksIndex].flytime * delTime),
-          (originLat + (self.postions[self.marksIndex].lat - originLat) / self.postions[self.marksIndex].flytime * delTime),
+          reallng,
+          reallat,
           //这个高度一致是有误的
           realheight + that.viewHeight
         );

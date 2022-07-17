@@ -72,7 +72,7 @@ export default {
       currentUser: {},
       enableMultiView: false,
       mapSelect: { cursor: "" },
-      curproject: {},
+      //curproject: {},
     };
   },
   computed: {
