@@ -415,8 +415,12 @@ export class CesiumFlyManager {
     // 相机看点的角度，如果大于0那么则是从地底往上看，所以要为负值
     const pitch = Cesium.Math.toRadians(this.pitchValue);
     // 给定飞行一周所需时间，比如10s, 那么每秒转动度数
-    let angle = (heading - lastheading) / this.changeCameraTime;
+    var isnegtive = heading - lastheading >= 0 ? 1.0 : -1.0;
+    let angle = (Math.abs(heading - lastheading) >= 180 ? ((lastheading - heading) + isnegtive * 180) : (heading - lastheading)) / this.changeCameraTime;
     // 时间间隔2秒钟
+
+    //heading - lastheading>0顺时针 超过-（heading - lastheading-180）
+    //heading - lastheading<0   <-180    -(heading - lastheading+180）
     this.setExtentTime(this.changeCameraTime);
     // 相机的当前heading
     const initialHeading = lastheading;

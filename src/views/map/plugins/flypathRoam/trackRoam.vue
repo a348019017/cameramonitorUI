@@ -89,6 +89,8 @@ export default {
       this.isshowflypath = item.checked;
       if (this.isshowflypath) {
         this.init();
+      } else {
+        this.clearOp();
       }
     },
     startplay: function () {
@@ -142,6 +144,7 @@ export default {
 
   },
   beforeDestroy() {
+    debugger
     this.clearOp();
   },
   created() { },
