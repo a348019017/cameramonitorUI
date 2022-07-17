@@ -41,7 +41,6 @@ const testproject = `
   ],
   "polygonlayername": "缺陷面",
   "timelinelayername": "裂缝",
-  "terrainprovider": "https://www.supermapol.com/realspace/services/3D-stk_terrain/rest/realspace/datas/info/data/path",
   "inputcolumns": [
       {
           "name": "name",
@@ -102,13 +101,13 @@ const testproject2 = `
       "isoffset": false
   },
   {
-    "url": "http://192.168.2.189:6583/Taiyuan/Html/Json/points.json",
+    "customapi":true,
+    "url": "http://221.235.53.36:28207/realtimeMonitoring/queryVehicleGpsList?mediaType=-1",
     "name": "车辆数据",
-    "type": "geojson",
+    "cluster":true,
+    "type": "geojsonx",
     "prj":"EPSG:4326",
-    "style": {
-        "name":"billboard"
-    },
+    "styles": [{"type":"billboard","mindistance":500},{"type":"model","url":"static/models/test.gltf","mindistance":0,"maxdistance":500}],
     "camera": [112.54216627280427, 37.7606077669049, 12000, -15.11191710192395, -90.90855164693353, 0.9029586440633],
     "offset": [
         112.40843958156897,
@@ -133,7 +132,6 @@ const testproject2 = `
     "prj":"EPSG:4326",
     "style": {
         "type":"trail",
-        "name": "point",
         "depthfailshow": true,
         "clampToGround":true,
         "width":10
@@ -159,8 +157,7 @@ const testproject2 = `
    }
   ],
   "polygonlayername": "缺陷面",
-  "timelinelayername": "裂缝",
-  "terrainprovider": "https://www.supermapol.com/realspace/services/3D-stk_terrain/rest/realspace/datas/info/data/path"
+  "timelinelayername": "裂缝"
 }
 `
 
@@ -199,12 +196,12 @@ const toolbar = `[
     "params": null
   }, {
     "id": "af66ae8e-129d-4861-ac1b-60efb8ec6878",
-    "name": "flymanager",
-    "title": "飞行漫游",
+    "name": "trackRoam",
+    "title": "轨迹漫游",
     "icon": "iconxuanqumoxing",
     "checked": false,
-    "component": "flypathRoam/flypathtool.vue",
-    "description": "飞行漫游",
+    "component": "flypathRoam/trackRoam.vue",
+    "description": "轨迹漫游",
     "hide": false,
     "params": null
   },
@@ -220,6 +217,9 @@ const toolbar = `[
     "params": null
   }
 ]`
+
+
+
 
 //返回需要加载的插件
 export function gettoolbar() {

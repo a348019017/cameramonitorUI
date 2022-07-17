@@ -47,7 +47,7 @@ function createPoint(route) {
     point: {
       color: Cesium.Color.RED,
       pixelSize: 5,
-      heightReference: Cesium.HeightReference.NONE,
+      heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
     },
   });
   return point;
@@ -62,8 +62,8 @@ function createLine(routes) {
   let shape = viewer.entities.add({
     polyline: {
       positions: positionData,
-      clampToGround: false,
-      material: new Cesium.PolylineTrailLinkMaterialProperty(Cesium.Color.CYAN, undefined, 3000),
+      clampToGround: true,
+      material: Cesium.Color.RED,
       width: 10,
     },
   });

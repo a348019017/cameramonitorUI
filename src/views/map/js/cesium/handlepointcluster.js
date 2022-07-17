@@ -1,6 +1,5 @@
 //处理点的聚类代码,这里传入的是datasource也就是说需要使用datasource进行加载type：geojsonX
 export function customStyle(dataSource) {
-  // let Cesium = this.Cesium;
   let removeListener;
   const pinBuilder = new Cesium.PinBuilder();
   const pin250 = pinBuilder
@@ -33,7 +32,7 @@ export function customStyle(dataSource) {
         cluster.billboard.show = true;
         cluster.billboard.id = cluster.label.id;
         cluster.billboard.verticalOrigin = Cesium.VerticalOrigin.BOTTOM;
-
+        cluster.billboard.heightReference = Cesium.HeightReference.CLAMP_TO_GROUND
         if (clusteredEntities.length >= 250) {
           cluster.billboard.image = pin250;
         } else if (clusteredEntities.length >= 200) {

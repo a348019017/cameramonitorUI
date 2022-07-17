@@ -1,4 +1,5 @@
 //maphelper的扩展方法，挂接到maphelper主方法中
+import { jsonToCesiumObject } from "./util";
 
 
 export let preDefineTMSUrl = [
@@ -26,22 +27,38 @@ export let preDefineTMSUrl = [
     minimumLevel: 3,
     maximumLevel: 21,
     value: true
+  },
+  {
+    name: "mapboxdark",
+    title: "mapbox地图",
+    url: "https://crack.jyaitech.com/gis/getmap?x={x}&y={y}&z={z}",
+    minimumLevel: 3,
+    maximumLevel: 21,
+    value: true,
+    type: "Cesium.MapboxStyleImageryProvider"
   }
 ];
 
 
 export default {
   //预定义的TMS
-
+  parseJsonToImageProvider: function (j) {
+    if (j.type)
+      return jsonToCesiumObject();
+    else {
+      let tmplayer = new Cesium.UrlTemplateImageryProvider({
+        url: j.url,
+        maximumLevel: j.maximumLevel ? j.maximumLevel : 21,
+        minimumLevel: j.minimumLevel ? j.minimumLevel : 0,
+        rectangle: j.rectangle ? Cesium.Rectangle.fromDegrees(j.rectangle[0], j.rectangle[1], j.rectangle[2], j.rectangle[3]) : Cesium.Rectangle.MAX_VALUE
+      });
+      return tmplayer;
+    }
+  },
   addimagelayer: function (viewer, j) {
     let viewerLayers = viewer.scene.imageryLayers;
     viewerLayers.removeAll();
-    let tmplayer = new Cesium.UrlTemplateImageryProvider({
-      url: j.url,
-      maximumLevel: j.maximumLevel ? j.maximumLevel : 21,
-      minimumLevel: j.minimumLevel ? j.minimumLevel : 0,
-      rectangle: j.rectangle ? Cesium.Rectangle.fromDegrees(j.rectangle[0], j.rectangle[1], j.rectangle[2], j.rectangle[3]) : Cesium.Rectangle.MAX_VALUE
-    });
+    let tmplayer = this.parseJsonToImageProvider(j);
     var imglayer = viewerLayers.addImageryProvider(tmplayer);
     j.ref = imglayer;
   }

@@ -4,9 +4,11 @@
   width: 110px;
   margin: 0 2px 0 0;
 }
+
 .el-form-item {
   margin-bottom: 5px;
 }
+
 .fromButton2 {
   background-image: linear-gradient(rgb(15 125 187), rgb(10 167 165));
   border: 1px solid rgba(43, 40, 40, 0.7);
@@ -22,6 +24,7 @@
   background: rgba(26, 26, 35, 0.5);
   border: 1px solid #000;
 }
+
 .flyPathList {
   text-align: left;
   padding: 0 5px;
@@ -31,6 +34,7 @@
   font-size: 12px;
   cursor: pointer;
 }
+
 .flyPathList .flyPathListName {
   color: #fff;
   width: 120px;
@@ -39,22 +43,27 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
 .flyPathNameChecked {
   color: #ff8d00;
 }
+
 .flyPathList .flyPathListIcon {
   margin: 0 0 0 3px;
   font-size: 12px;
   float: right;
   display: none;
 }
+
 .flyPathList .flyPathListIcon:hover {
   cursor: pointer;
   color: #458ff8;
 }
+
 .flyPathList:hover .flyPathListIcon {
   display: block;
 }
+
 .flyButtonBox {
   width: 48px;
   height: 48px;
@@ -63,17 +72,17 @@
   text-align: center;
   margin: 0;
   padding: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.3) 0%,
-    rgba(255, 255, 255, 0.5) 100%,
-    rgba(23, 21, 21, 0.8) 0%
-  );
+  background: linear-gradient(180deg,
+      rgba(255, 255, 255, 0.3) 0%,
+      rgba(255, 255, 255, 0.5) 100%,
+      rgba(23, 21, 21, 0.8) 0%);
   border-radius: 44px;
 }
+
 .flyButtonBox .eeIconfont {
   color: #fff;
 }
+
 .flyButtonBox:hover {
   cursor: pointer;
   background: linear-gradient(180deg, #2681ff 0%, rgba(1, 20, 46, 0.1) 100%);
@@ -83,40 +92,21 @@
 #flyPathBox .el-form-item__label {
   color: #fff;
 }
-#flyPathBox .el-checkbox__input.is-checked + .el-checkbox__label {
+
+#flyPathBox .el-checkbox__input.is-checked+.el-checkbox__label {
   color: #fff;
 }
 </style>
 <template>
-  <common-setting
-    v-show="flyPathBoxShow"
-    :title="currcompentTitle"
-    :currFromTitle="currcompentTitle"
-    :dragable="dragable"
-    @ismax="handlemax"
-    :styles="styles"
-    :minable="true"
-    minheight="120"
-    @close="formClose"
-  >
+  <common-setting v-show="flyPathBoxShow" :title="currcompentTitle" :currFromTitle="currcompentTitle"
+    :dragable="dragable" @ismax="handlemax" :styles="styles" :minable="true" minheight="120" @close="formClose">
     <div slot="content" id="flyPathBox" style="padding: 10px">
       <el-row>
         <el-col v-show="ismax" :span="24">
-          <el-button
-            size="small"
-            class="fromButton2"
-            style="margin-left: 0px"
-            @click="startFlyLine"
-          >
+          <el-button size="small" class="fromButton2" style="margin-left: 0px" @click="startFlyLine">
             {{ isdrawingpath ? "结束绘制" : "绘制路径" }}
           </el-button>
-          <el-button
-            size="small"
-            class="fromButton2"
-            style="margin-left: 10px"
-            @click="saveFlyLine"
-            >保存路径</el-button
-          >
+          <el-button size="small" class="fromButton2" style="margin-left: 10px" @click="saveFlyLine">保存路径</el-button>
           <!-- <el-button
             size="small"
             class="fromButton2"
@@ -135,24 +125,12 @@
         <el-col v-show="ismax" :span="24" style="margin: 15px 0 0 0">
           <el-col :span="11">
             <div class="flyPathListBox">
-              <p
-                class="flyPathList"
-                v-for="(item, index) in currFlyLineData"
-                :key="item.name"
-              >
-                <span
-                  :class="[
-                    'flyPathListName',
-                    item.checked ? 'flyPathNameChecked' : '',
-                  ]"
-                  :title="item.name"
-                  @click="selFlyLineClick(item, index)"
-                  >{{ item.name }}</span
-                >
-                <span
-                  class="eeIconfont iconshanchu flyPathListIcon"
-                  @click="delFlyLineClick(item, index)"
-                ></span>
+              <p class="flyPathList" v-for="(item, index) in currFlyLineData" :key="item.name">
+                <span :class="[
+                  'flyPathListName',
+                  item.checked ? 'flyPathNameChecked' : '',
+                ]" :title="item.name" @click="selFlyLineClick(item, index)">{{ item.name }}</span>
+                <span class="eeIconfont iconshanchu flyPathListIcon" @click="delFlyLineClick(item, index)"></span>
                 <!-- <span
                   class="eeIconfont iconxiugai flyPathListIcon"
                   @click="updataFlyLineClick(item, index)"
@@ -163,71 +141,32 @@
           <el-col :span="13">
             <el-tabs v-model="activeName">
               <el-tab-pane label="路径设置" name="pathset">
-                <el-form
-                  label-position="left"
-                  :model="formItem"
-                  label-width="100px"
-                  id="pathFlyFromId"
-                >
+                <el-form label-position="left" :model="formItem" label-width="100px" id="pathFlyFromId">
                   <el-form-item label="名称：">
-                    <el-input
-                      v-model="curSelFlyLineData.name"
-                      placeholder="名称"
-                      size="small"
-                      controls-position="right"
-                      :disabled="isSetParm"
-                      style="width: 100%"
-                    ></el-input>
+                    <el-input v-model="curSelFlyLineData.name" placeholder="名称" size="small" controls-position="right"
+                      :disabled="isSetParm" style="width: 100%"></el-input>
                   </el-form-item>
                   <el-form-item label="速度：">
-                    <el-input-number
-                      v-model="formItem.speed"
-                      placeholder="60"
-                      size="small"
-                      controls-position="right"
-                      class="optTextClass"
-                      :disabled="isSetParm"
-                    ></el-input-number
-                    >m/s
+                    <el-input-number v-model="formItem.speed" placeholder="60" size="small" controls-position="right"
+                      class="optTextClass" :disabled="isSetParm"></el-input-number>m/s
                   </el-form-item>
                   <el-form-item label="高度：">
-                    <el-input-number
-                      v-model="formItem.viewHeight"
-                      placeholder="60"
-                      size="small"
-                      controls-position="right"
-                      class="optTextClass"
-                      :disabled="isSetParm"
-                    ></el-input-number
-                    >m
+                    <el-input-number v-model="formItem.viewHeight" placeholder="60" size="small"
+                      controls-position="right" class="optTextClass" :disabled="isSetParm"></el-input-number>m
                   </el-form-item>
                   <el-form-item label="高程模式:">
-                    <el-select
-                      v-model="formItem.altitudemode"
-                      placeholder="绝对高程"
-                      size="small"
-                      style="width: 100%"
-                      :disabled="isSetParm"
-                    >
+                    <el-select v-model="formItem.altitudemode" placeholder="绝对高程" size="small" style="width: 100%"
+                      :disabled="isSetParm">
                       <el-option label="绝对高程" value="绝对高程"></el-option>
                       <el-option label="相对高程" value="相对高程"></el-option>
                       <el-option label="无" value="无"></el-option>
                     </el-select>
                   </el-form-item>
                   <el-form-item label="模型:">
-                    <el-select
-                      v-model="formItem.modelname"
-                      placeholder="选择模型"
-                      size="small"
-                      style="width: 100%"
-                      :disabled="isSetParm"
-                    >
-                      <el-option
-                        v-for="mitems of preDefineModels"
-                        :key="mitems.name"
-                        :label="mitems.name"
-                        :value="mitems.name"
-                      ></el-option>
+                    <el-select v-model="formItem.modelname" placeholder="选择模型" size="small" style="width: 100%"
+                      :disabled="isSetParm">
+                      <el-option v-for="mitems of preDefineModels" :key="mitems.name" :label="mitems.name"
+                        :value="mitems.name"></el-option>
                       <el-option label="无" value=""></el-option>
                     </el-select>
                   </el-form-item>
@@ -248,78 +187,32 @@
                 </el-select>
               </el-form-item> -->
                   <el-form-item label="角度：">
-                    <el-input-number
-                      v-model="formItem.viewAngle"
-                      placeholder="60"
-                      size="small"
-                      :min="-89"
-                      :max="89"
-                      controls-position="right"
-                      class="optTextClass"
-                      :disabled="isSetParm"
-                    ></el-input-number
-                    >°
+                    <el-input-number v-model="formItem.viewAngle" placeholder="60" size="small" :min="-89" :max="89"
+                      controls-position="right" class="optTextClass" :disabled="isSetParm"></el-input-number>°
                   </el-form-item>
                   <el-form-item label="转角时间：">
-                    <el-input-number
-                      v-model="formItem.changeCameraTime"
-                      placeholder="1"
-                      size="small"
-                      controls-position="right"
-                      class="optTextClass"
-                      :disabled="isSetParm"
-                    ></el-input-number>
+                    <el-input-number v-model="formItem.changeCameraTime" placeholder="1" size="small"
+                      controls-position="right" class="optTextClass" :disabled="isSetParm"></el-input-number>
                   </el-form-item>
                 </el-form>
               </el-tab-pane>
               <el-tab-pane label="模型设置" name="modelset">
-                <el-form
-                  label-position="left"
-                  :model="formItem"
-                  label-width="100px"
-                  id="pathFlyFromId"
-                >
+                <el-form label-position="left" :model="formItem" label-width="100px" id="pathFlyFromId">
                   <el-form-item v-show="showmodalset" label="scale：">
-                    <el-input-number
-                      v-model="modelinfo.scale"
-                      placeholder="1"
-                      size="small"
-                      controls-position="right"
-                      class="optTextClass"
-                    ></el-input-number>
+                    <el-input-number v-model="modelinfo.scale" placeholder="1" size="small" controls-position="right"
+                      class="optTextClass"></el-input-number>
                   </el-form-item>
                   <el-form-item v-show="showmodalset" label="heading：">
-                    <el-input-number
-                      v-model="modelinfo.heading"
-                      placeholder="0"
-                      size="small"
-                      :min="-180"
-                      :max="180"
-                      controls-position="right"
-                      class="optTextClass"
-                    ></el-input-number>
+                    <el-input-number v-model="modelinfo.heading" placeholder="0" size="small" :min="-180" :max="180"
+                      controls-position="right" class="optTextClass"></el-input-number>
                   </el-form-item>
                   <el-form-item v-show="showmodalset" label="pitch：">
-                    <el-input-number
-                      v-model="modelinfo.pitch"
-                      placeholder="0"
-                      size="small"
-                      :min="-180"
-                      :max="180"
-                      controls-position="right"
-                      class="optTextClass"
-                    ></el-input-number>
+                    <el-input-number v-model="modelinfo.pitch" placeholder="0" size="small" :min="-180" :max="180"
+                      controls-position="right" class="optTextClass"></el-input-number>
                   </el-form-item>
                   <el-form-item v-show="showmodalset" label="roll：">
-                    <el-input-number
-                      v-model="modelinfo.roll"
-                      placeholder="0"
-                      size="small"
-                      :min="-180"
-                      :max="180"
-                      controls-position="right"
-                      class="optTextClass"
-                    ></el-input-number>
+                    <el-input-number v-model="modelinfo.roll" placeholder="0" size="small" :min="-180" :max="180"
+                      controls-position="right" class="optTextClass"></el-input-number>
                   </el-form-item>
                 </el-form>
               </el-tab-pane>
@@ -327,20 +220,10 @@
           </el-col>
         </el-col>
         <el-col :span="24" style="margin: 25px 0 20px 0px">
-          <p
-            class="flyButtonBox"
-            v-if="currFlyFlag == 'start'"
-            @click="startFly"
-            style="margin: 0 0 0 100px"
-          >
+          <p class="flyButtonBox" v-if="currFlyFlag == 'start'" @click="startFly" style="margin: 0 0 0 100px">
             <span class="eeIconfont iconziyuan"></span>
           </p>
-          <p
-            class="flyButtonBox"
-            v-if="currFlyFlag == 'pause'"
-            @click="pauseFly"
-            style="margin: 0 0 0 100px"
-          >
+          <p class="flyButtonBox" v-if="currFlyFlag == 'pause'" @click="pauseFly" style="margin: 0 0 0 100px">
             <span class="eeIconfont iconpause-full"></span>
           </p>
           <p class="flyButtonBox" @click="stopFly" style="margin: 0 0 0 70px">
@@ -452,8 +335,8 @@ export default {
         viewer.entities.remove(getByIdBox);
       }
     },
-    isShowFlyLineChange: function (val) {},
-    viewTypeChange: function (type) {},
+    isShowFlyLineChange: function (val) { },
+    viewTypeChange: function (type) { },
     // 保存路径线
     saveFlyLine: function () {
       if (this.currFlyLineData)
@@ -509,7 +392,7 @@ export default {
         option: clone(this.defaultoption),
       });
     },
-    flyLineLight: function () {},
+    flyLineLight: function () { },
     startFly: function () {
       if (this.curSelFlyLineData) {
         this.CesiumFlyManagers.startFly();
@@ -538,7 +421,7 @@ export default {
         this.currFlyLineData = data.data.data;
       });
     },
-    updataFlyLineClick: function (item, index) {},
+    updataFlyLineClick: function (item, index) { },
     delFlyLineClick: function (item, index) {
       if (item.id) {
         deleteFlyPath(item.id).then((d) => {
@@ -595,12 +478,12 @@ export default {
       preDefineModels: [],
       //当前飞行状态，决定控件的状态
       currFlyFlag: "start",
-      lineEntities: [],
+      //lineEntities: [],
       //当前是否绘制路径
-      cesiumdrawtool: undefined,
+      //cesiumdrawtool: undefined,
       isdrawingpath: false,
-      currDrawLineObj: "", //当前绘制线的返回对象
-      CesiumFlyManagers: null,
+      //currDrawLineObj: "", //当前绘制线的返回对象
+      //CesiumFlyManagers: null,
 
       currFlyLineData: [],
       //当前选择的飞行路径

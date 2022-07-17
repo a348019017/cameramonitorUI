@@ -5,16 +5,20 @@
   right: 140px;
   position: absolute;
 }
+
 .toolbarstyle .el-checkbox__input {
   background: rgba(13, 71, 161, 0.7);
 }
+
 .toolbarstyle .el-checkbox {
   color: #ffffff;
 }
+
 .toolbarstyle .el-button {
   border: 1px solid #00dad8;
   background: rgba(13, 71, 161, 0.7);
 }
+
 .toolbarstyle .eeIconfont,
 .toolbarstyle .el-button {
   color: #ffffff;
@@ -24,60 +28,20 @@
 <template>
   <div v-if="ishowtools" class="toolbarstyle">
     <!-- <el-checkbox v-model="clampToGround">贴地</el-checkbox> -->
-    <el-tooltip
-      class="item"
-      effect="dark"
-      content="长度测量"
-      placement="bottom"
-    >
-      <el-button
-        icon=" eeIconfont icondibiaojuli"
-        @click="onclickmeaurelength"
-        circle
-      ></el-button>
+    <el-tooltip class="item" effect="dark" content="长度测量" placement="bottom">
+      <el-button icon=" eeIconfont icondibiaojuli" @click="onclickmeaurelength" circle></el-button>
     </el-tooltip>
-    <el-tooltip
-      class="item"
-      effect="dark"
-      content="面积测量"
-      placement="bottom"
-    >
-      <el-button
-        icon=" eeIconfont iconmianbiaohui"
-        @click="onclickmeaurearea"
-        circle
-      ></el-button>
+    <el-tooltip class="item" effect="dark" content="面积测量" placement="bottom">
+      <el-button icon=" eeIconfont iconmianbiaohui" @click="onclickmeaurearea" circle></el-button>
     </el-tooltip>
-    <el-tooltip
-      class="item"
-      effect="dark"
-      content="三角测量"
-      placement="bottom"
-    >
-      <el-button
-        icon=" eeIconfont iconsanjiaoceliang"
-        @click="onclickmeaureTriangles"
-        circle
-      ></el-button>
+    <el-tooltip class="item" effect="dark" content="三角测量" placement="bottom">
+      <el-button icon=" eeIconfont iconsanjiaoceliang" @click="onclickmeaureTriangles" circle></el-button>
     </el-tooltip>
     <el-tooltip class="item" effect="dark" content="点测量" placement="bottom">
-      <el-button
-        icon=" eeIconfont iconsanjiaoceliang"
-        @click="onclickmeaurePoint"
-        circle
-      ></el-button>
+      <el-button icon=" eeIconfont iconsanjiaoceliang" @click="onclickmeaurePoint" circle></el-button>
     </el-tooltip>
-    <el-tooltip
-      class="item"
-      effect="dark"
-      content="清除测量"
-      placement="bottom"
-    >
-      <el-button
-        icon=" eeIconfont iconshanchu"
-        @click="onclickmeasureclear"
-        circle
-      ></el-button>
+    <el-tooltip class="item" effect="dark" content="清除测量" placement="bottom">
+      <el-button icon=" eeIconfont iconshanchu" @click="onclickmeasureclear" circle></el-button>
     </el-tooltip>
   </div>
 </template>
@@ -118,14 +82,14 @@ export default {
     onclickmeaureTriangles: function () {
       // 三维量测
       this.pointmeasure.deactive();
-      this.measure.drawTrianglesMeasureGraphics({ callback: () => {} });
+      this.measure.drawTrianglesMeasureGraphics({ callback: () => { } });
     },
     onclickmeaurearea: function () {
       // 空间面积
       this.pointmeasure.deactive();
       this.measure.drawAreaMeasureGraphics({
         clampToGround: this.clampToGround,
-        callback: () => {},
+        callback: () => { },
       });
     },
     //处理点击操作，额外添加label用于显示经纬度高程
@@ -179,7 +143,7 @@ export default {
       this.pointmeasure.deactive();
       this.measure.drawLineMeasureGraphics({
         clampToGround: this.clampToGround,
-        callback: () => {},
+        callback: () => { },
       });
     },
     deactive: function () {
@@ -199,22 +163,17 @@ export default {
       { isclearwhencomplete: false }
     );
   },
-  created() {},
+  created() { },
   data() {
     return {
-      measure: null,
+      //measure: null,
       ishowtools: false,
       clampToGround: false,
-      pointmeasure: undefined,
+      //pointmeasure: undefined,
     };
   },
   watch: {
-    "$store.state.app.projects": {
-      handler: function (newValue, oldValue) {
-        //切换项目的时候是否需要重新初始化
-        this.measure._drawLayer.entities.removeAll();
-      },
-    },
+
   },
 };
 </script>

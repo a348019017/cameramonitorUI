@@ -1,6 +1,7 @@
 import mapHelper from './mapHelper'
 import { myprimitives, octree } from './mapHelper'
 import { handlepointsloadbygeojson } from "./cesium/handlepointcluster";
+import { getgeojson } from "../api/query"
 var cesiumloader = {}
 
 let curproject = undefined;
@@ -127,13 +128,52 @@ cesiumloader.loadproject = function (project, _userinfo, _defaultcfg, viewer) {
 
 //提供GeoJSONdatasource加载
 cesiumloader.loadGeojsonBySource = function (element) {
-  var source = Cesium.GeoJsonDataSource.load(element.url).then((data, err) => {
-    handlepointsloadbygeojson(data, element)
+  //如果是自定义的api接口，如何处理呢,这里提供了一个方法
+  if (element.customapi) {
+    getgeojson(element.url).then(geojson => {
+      var source = Cesium.GeoJsonDataSource.load(geojson, { clampToGround: true }).then((data, err) => {
+        handlepointsloadbygeojson(data, element)
+        if (element.styles) {
+          var modelstyle = element.styles.find(j => j.type == "model");
+          if (modelstyle) {
+            let mindistance = modelstyle.mindistance ? modelstyle.mindistance : 0;
+            let maxdistance = modelstyle.maxdistance ? modelstyle.maxdistance : Number.MAX_VALUE;
+            data.entities._entities._array.forEach(enty => {
+              enty.model = {
+                uri: modelstyle.url, minimumPixelSize: 128,
+                maximumScale: 20000, heightReference: Cesium.HeightReference.CLAMP_TO_GROUND, distanceDisplayCondition: new Cesium.DistanceDisplayCondition(mindistance, maxdistance)
+              }
+            })
+          }
+          var billboardstyle = element.styles.find(j => j.type == "billboard");
+          if (billboardstyle) {
+            let mindistance = billboardstyle.mindistance ? billboardstyle.mindistance : 0;
+            let maxdistance = billboardstyle.maxdistance ? billboardstyle.maxdistance : Number.MAX_VALUE;
+            data.entities._entities._array.forEach(enty => {
+              if (enty.billboard) {
+                enty.billboard.distanceDisplayCondition = new Cesium.DistanceDisplayCondition(mindistance, maxdistance);
+              }
+            })
+          }
+        }
+        viewer.dataSources.add(
+          data
+        );
+        data.show = element.checked;
+        element.entities = [data];
+      });
+    });
+    return;
+  }
+  var source = Cesium.GeoJsonDataSource.load(element.url, { clampToGround: true }).then((data, err) => {
+    handlepointsloadbygeojson(data, element);
+    //额外添加汽车模型
+    viewer.dataSources.add(
+      data
+    );
+
+    element.entities = [data];
   });
-  viewer.dataSources.add(
-    source
-  );
-  element.entities = [source];
 }
 
 function initService(mapservices, viewer) {

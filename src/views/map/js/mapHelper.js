@@ -4,6 +4,7 @@ import { drawWater } from "./cesium/water"
 import { Octree } from "./cesium/octree"
 import _3dtilesetshader from "./cesium/_3dtilesetshader"
 
+
 /**
  * 三维球操作
  * @classdesc 三维球操作
@@ -316,9 +317,18 @@ mapHelper.loadgeojsonex = function (element, viewer) {
     }
     handlelabelshow(element, viewer);
     handleiconshow(element, viewer);
+    handlelayervisible(element);
+
   });
   //这里返回一个集合记录加载的entities   
 
+}
+
+//处理图层的显示隐藏
+function handlelayervisible(element, viewer) {
+  let checked = element.checked;
+  if (element.entities)
+    element.entities.forEach((i) => (i.show = checked));
 }
 
 
@@ -645,9 +655,6 @@ mapHelper.gettilesetfromentity = function (name, viewer) {
 
 //初始化viewer
 mapHelper.initviewer = function (id) {
-
-
-
   var viewer = new Cesium.Viewer(id, {
     //和透明度相关的设置
     orderIndependentTranslucency: false,
@@ -707,10 +714,9 @@ mapHelper.initviewer = function (id) {
   //     viewer.scene.light.direction = Cesium.Cartesian3.clone(scene.camera.directionWC, viewer.scene.light.direction);
   // });
 
+  viewer.scene.globe.depthTestAgainstTerrain = true;
   //创建一个primitivecollection用于放置一些如动态水的对象
   viewer.scene.primitives.add(myprimitives);
-
-
   return viewer;
 }
 

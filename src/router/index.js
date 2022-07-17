@@ -53,23 +53,23 @@ export const asyncRoutes = [
       },
     ],
   },
-  {
-    path: '/personnelManagement',
-    component: Layout,
-    redirect: 'noRedirect',
-    name: 'PersonnelManagement',
-    meta: { title: '配置', icon: 'users-cog', permissions: ['admin'] },
-    children: [
-      {
-        path: 'userManagement',
-        name: 'UserManagement',
-        component: () =>
-          import('@/views/map/map'),
-        meta: { title: '地图组件' },
-      },
-      
-    ],
-  },
+  // {
+  //   path: '/personnelManagement',
+  //   component: Layout,
+  //   redirect: 'noRedirect',
+  //   name: 'PersonnelManagement',
+  //   meta: { title: '配置', icon: 'users-cog', permissions: ['admin'] },
+  //   children: [
+  //     {
+  //       path: 'userManagement',
+  //       name: 'UserManagement',
+  //       component: () =>
+  //         import('@/views/map/map'),
+  //       meta: { title: '地图组件' },
+  //     },
+
+  //   ],
+  // },
   // {
   //   path: '/mall',
   //   component: Layout,

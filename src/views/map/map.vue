@@ -12,7 +12,7 @@
   <div class="maproot">
     <div id="easyearthContainer" :style="mapSelect"
       :class="[enableMultiView ? 'easyearthMultiContainer' : 'easyearthContainer']"></div>
-    <toolbar v-if="showtoolbar" :project="curproject"></toolbar>
+    <toolbar v-if="showtoolbar"></toolbar>
   </div>
 
 </template>
@@ -23,7 +23,6 @@ import cesiumloader from "./js/cesiumloader";
 import { getProject, getDefaultcfg } from "./api/map"
 import toolbar from "./toolbar2.vue"
 
-var viewer = null;
 export default {
   components: { toolbar },
   methods: {
@@ -40,7 +39,7 @@ export default {
     },
     //额外的初始化工作
     init() {
-      viewer = mapHelper.initviewer("easyearthContainer");
+      const viewer = mapHelper.initviewer("easyearthContainer");
       window.viewer = viewer;
       window.mapHelper = mapHelper;
     },
@@ -58,12 +57,13 @@ export default {
     this.curproject = getProject();
     this.initprojectx(this.curproject, viewer);
 
+
     //获取三维球的全局配置，写入到全局中用于相关调用，然后再初始化地球
-    var layer = new Cesium.MapboxStyleImageryProvider({
-      styleId: 'dark-v10',
-      accessToken: 'pk.eyJ1IjoicG9uZ3hpZSIsImEiOiJjbDVrdmtndHowZHY3M2pxcjdrZzZsZTVoIn0.3PpdH5rSURGGtrfp90iIOw',
-    });
-    viewer.imageryLayers.addImageryProvider(layer);
+    // var layer = new Cesium.MapboxStyleImageryProvider({
+    //   styleId: 'dark-v10',
+    //   accessToken: 'pk.eyJ1IjoicG9uZ3hpZSIsImEiOiJjbDVrdmtndHowZHY3M2pxcjdrZzZsZTVoIn0.3PpdH5rSURGGtrfp90iIOw',
+    // });
+    // viewer.imageryLayers.addImageryProvider(layer);
 
   },
   data() {

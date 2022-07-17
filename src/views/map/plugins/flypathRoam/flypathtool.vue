@@ -22,9 +22,14 @@ export default {
       item.checked = !item.checked;
       this.isshowflypath = item.checked;
     },
+    startplay: function () {
+
+    }
   },
-  mounted() {},
-  created() {},
+  mounted() {
+    //this.CesiumFlyManagers = new CesiumFlyManager();
+  },
+  created() { },
   data() {
     return {
       isshowflypath: false,
